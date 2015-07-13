@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Iter",""],["IterMut",""],["Keys",""],["LinkedHashMap","A linked hash map."],["Values",""]]});
+initSidebarItems({"struct":[["Iter","An insertion-order iterator over a `LinkedHashMap`'s entries, with immutable references to the values."],["IterMut","An insertion-order iterator over a `LinkedHashMap`'s entries, with mutable references to the values."],["Keys","An insertion-order iterator over a `LinkedHashMap`'s keys."],["LinkedHashMap","A linked hash map."],["Values","An insertion-order iterator over a `LinkedHashMap`'s values."]]});
