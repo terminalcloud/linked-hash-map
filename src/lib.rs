@@ -13,7 +13,7 @@
 //! # Examples
 //!
 //! ```
-//! use linked_hash_map::LinkedHashMap;
+//! use terminal_linked_hash_map::LinkedHashMap;
 //!
 //! let mut map = LinkedHashMap::new();
 //! map.insert(2, 20);
@@ -28,13 +28,11 @@
 //! ```
 
 #![forbid(missing_docs)]
-#![feature(hashmap_hasher)]
 #![cfg_attr(test, feature(test))]
 
 use std::borrow::Borrow;
 use std::cmp::Ordering;
-use std::collections::hash_map::{self, HashMap};
-use std::collections::hash_state::HashState;
+use std::collections::hash_map::HashMap;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::iter;
@@ -53,8 +51,8 @@ struct LinkedHashMapEntry<K, V> {
 }
 
 /// A linked hash map.
-pub struct LinkedHashMap<K, V, S = hash_map::RandomState> {
-    map: HashMap<KeyRef<K>, Box<LinkedHashMapEntry<K, V>>, S>,
+pub struct LinkedHashMap<K, V> {
+    map: HashMap<KeyRef<K>, Box<LinkedHashMapEntry<K, V>>>,
     head: *mut LinkedHashMapEntry<K, V>,
     free: *mut LinkedHashMapEntry<K, V>,
 }
@@ -117,7 +115,7 @@ impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     }
 }
 
-impl<K, V, S> LinkedHashMap<K, V, S> {
+impl<K, V> LinkedHashMap<K, V> {
     fn clear_free_list(&mut self) {
         unsafe {
             let mut free = self.free;
@@ -131,23 +129,13 @@ impl<K, V, S> LinkedHashMap<K, V, S> {
     }
 }
 
-impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
-    fn with_map(map: HashMap<KeyRef<K>, Box<LinkedHashMapEntry<K, V>>, S>) -> Self {
+impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
+    fn with_map(map: HashMap<KeyRef<K>, Box<LinkedHashMapEntry<K, V>>>) -> Self {
         LinkedHashMap {
             map: map,
             head: ptr::null_mut(),
             free: ptr::null_mut(),
         }
-    }
-
-    /// Creates an empty linked hash map with the given initial hash state.
-    pub fn with_hash_state(hash_state: S) -> Self {
-        Self::with_map(HashMap::with_hash_state(hash_state))
-    }
-
-    /// Creates an empty linked hash map with the given initial capacity and hash state.
-    pub fn with_capacity_and_hash_state(capacity: usize, hash_state: S) -> Self {
-        Self::with_map(HashMap::with_capacity_and_hash_state(capacity, hash_state))
     }
 
     /// Reserves capacity for at least `additional` more elements to be inserted into the map. The
@@ -172,7 +160,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
     /// map.insert(1, "a");
@@ -236,7 +224,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
     /// map.insert(1, "a");
@@ -256,7 +244,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
     /// map.insert(1, "a");
@@ -277,7 +265,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
     /// map.insert(1, "a");
@@ -308,7 +296,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     ///
     /// map.insert(2, "a");
@@ -340,7 +328,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map: LinkedHashMap<i32, &str> = LinkedHashMap::new();
     /// let capacity = map.capacity();
     /// ```
@@ -355,7 +343,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     /// map.insert(1, 10);
     /// map.insert(2, 20);
@@ -380,7 +368,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     /// map.insert(1, 10);
     /// map.insert(2, 20);
@@ -401,7 +389,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     /// map.insert(1, 10);
     /// map.insert(2, 20);
@@ -426,7 +414,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// # Examples
     ///
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     /// let mut map = LinkedHashMap::new();
     /// map.insert(1, 10);
     /// map.insert(2, 20);
@@ -465,7 +453,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     ///
     /// # Examples
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     ///
     /// let mut map = LinkedHashMap::new();
     /// map.insert("a", 10);
@@ -496,7 +484,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     /// Iterator element type is `(&'a K, &'a mut V)`
     /// # Examples
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     ///
     /// let mut map = LinkedHashMap::new();
     /// map.insert("a", 10);
@@ -530,7 +518,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     ///
     /// # Examples
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     ///
     /// let mut map = LinkedHashMap::new();
     /// map.insert('a', 10);
@@ -554,7 +542,7 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     ///
     /// # Examples
     /// ```
-    /// use linked_hash_map::LinkedHashMap;
+    /// use terminal_linked_hash_map::LinkedHashMap;
     ///
     /// let mut map = LinkedHashMap::new();
     /// map.insert('a', 10);
@@ -575,8 +563,8 @@ impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
     }
 }
 
-impl<'a, K, V, S, Q: ?Sized> Index<&'a Q> for LinkedHashMap<K, V, S>
-    where K: Hash + Eq + Borrow<Q>, S: HashState, Q: Eq + Hash
+impl<'a, K, V, Q: ?Sized> Index<&'a Q> for LinkedHashMap<K, V>
+    where K: Hash + Eq + Borrow<Q>, Q: Eq + Hash
 {
     type Output = V;
 
@@ -585,15 +573,15 @@ impl<'a, K, V, S, Q: ?Sized> Index<&'a Q> for LinkedHashMap<K, V, S>
     }
 }
 
-impl<'a, K, V, S, Q: ?Sized> IndexMut<&'a Q> for LinkedHashMap<K, V, S>
-    where K: Hash + Eq + Borrow<Q>, S: HashState, Q: Eq + Hash
+impl<'a, K, V, Q: ?Sized> IndexMut<&'a Q> for LinkedHashMap<K, V>
+    where K: Hash + Eq + Borrow<Q>, Q: Eq + Hash
 {
     fn index_mut(&mut self, index: &'a Q) -> &mut V {
         self.get_mut(index).expect("no entry found for key")
     }
 }
 
-impl<K: Hash + Eq, V, S: HashState> LinkedHashMap<K, V, S> {
+impl<K: Hash + Eq, V> LinkedHashMap<K, V> {
     #[inline]
     fn detach(&mut self, node: *mut LinkedHashMapEntry<K, V>) {
         unsafe {
@@ -622,11 +610,11 @@ impl<K: Hash + Eq + Clone, V: Clone> Clone for LinkedHashMap<K, V> {
     }
 }
 
-impl<K: Hash + Eq, V, S: HashState + Default> Default for LinkedHashMap<K, V, S> {
-    fn default() -> Self { LinkedHashMap::with_hash_state(Default::default()) }
+impl<K: Hash + Eq, V> Default for LinkedHashMap<K, V> {
+    fn default() -> Self { LinkedHashMap::new() }
 }
 
-impl<K: Hash + Eq, V, S: HashState> Extend<(K, V)> for LinkedHashMap<K, V, S> {
+impl<K: Hash + Eq, V> Extend<(K, V)> for LinkedHashMap<K, V> {
     fn extend<T: IntoIterator<Item=(K, V)>>(&mut self, iter: T) {
         for (k, v) in iter {
             self.insert(k, v);
@@ -634,23 +622,23 @@ impl<K: Hash + Eq, V, S: HashState> Extend<(K, V)> for LinkedHashMap<K, V, S> {
     }
 }
 
-impl<K: Hash + Eq, V, S: HashState + Default> iter::FromIterator<(K, V)> for LinkedHashMap<K, V, S> {
+impl<K: Hash + Eq, V> iter::FromIterator<(K, V)> for LinkedHashMap<K, V> {
     fn from_iter<I: IntoIterator<Item=(K, V)>>(iter: I) -> Self {
         let iter = iter.into_iter();
-        let mut map = Self::with_capacity_and_hash_state(iter.size_hint().0, Default::default());
+        let mut map = Self::with_capacity(iter.size_hint().0);
         map.extend(iter);
         map
     }
 }
 
-impl<A: fmt::Debug + Hash + Eq, B: fmt::Debug, S: HashState> fmt::Debug for LinkedHashMap<A, B, S> {
+impl<A: fmt::Debug + Hash + Eq, B: fmt::Debug> fmt::Debug for LinkedHashMap<A, B> {
     /// Returns a string that lists the key-value pairs in insertion order.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_map().entries(self).finish()
     }
 }
 
-impl<K: Hash + Eq, V: PartialEq, S: HashState> PartialEq for LinkedHashMap<K, V, S> {
+impl<K: Hash + Eq, V: PartialEq> PartialEq for LinkedHashMap<K, V> {
     fn eq(&self, other: &Self) -> bool {
         self.len() == other.len() && self.iter().eq(other)
     }
@@ -660,9 +648,9 @@ impl<K: Hash + Eq, V: PartialEq, S: HashState> PartialEq for LinkedHashMap<K, V,
     }
 }
 
-impl<K: Hash + Eq, V: Eq, S: HashState> Eq for LinkedHashMap<K, V, S> {}
+impl<K: Hash + Eq, V: Eq> Eq for LinkedHashMap<K, V> {}
 
-impl<K: Hash + Eq + PartialOrd, V: PartialOrd, S: HashState> PartialOrd for LinkedHashMap<K, V, S> {
+impl<K: Hash + Eq + PartialOrd, V: PartialOrd> PartialOrd for LinkedHashMap<K, V> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         self.iter().partial_cmp(other)
     }
@@ -684,21 +672,21 @@ impl<K: Hash + Eq + PartialOrd, V: PartialOrd, S: HashState> PartialOrd for Link
     }
 }
 
-impl<K: Hash + Eq + Ord, V: Ord, S: HashState> Ord for LinkedHashMap<K, V, S> {
+impl<K: Hash + Eq + Ord, V: Ord> Ord for LinkedHashMap<K, V> {
     fn cmp(&self, other: &Self) -> Ordering {
         self.iter().cmp(other)
     }
 }
 
-impl<K: Hash + Eq, V: Hash, S: HashState> Hash for LinkedHashMap<K, V, S> {
+impl<K: Hash + Eq, V: Hash> Hash for LinkedHashMap<K, V> {
     fn hash<H: Hasher>(&self, h: &mut H) { for e in self.iter() { e.hash(h); } }
 }
 
-unsafe impl<K: Send, V: Send, S: Send> Send for LinkedHashMap<K, V, S> {}
+unsafe impl<K: Send, V: Send> Send for LinkedHashMap<K, V> {}
 
-unsafe impl<K: Sync, V: Sync, S: Sync> Sync for LinkedHashMap<K, V, S> {}
+unsafe impl<K: Sync, V: Sync> Sync for LinkedHashMap<K, V> {}
 
-impl<K, V, S> Drop for LinkedHashMap<K, V, S> {
+impl<K, V> Drop for LinkedHashMap<K, V> {
     fn drop(&mut self) {
         unsafe {
             if ! self.head.is_null() {
@@ -867,13 +855,13 @@ impl<'a, K, V> ExactSizeIterator for Values<'a, K, V> {
     fn len(&self) -> usize { self.inner.len() }
 }
 
-impl<'a, K: Hash + Eq, V, S: HashState> IntoIterator for &'a LinkedHashMap<K, V, S> {
+impl<'a, K: Hash + Eq, V> IntoIterator for &'a LinkedHashMap<K, V> {
     type Item = (&'a K, &'a V);
     type IntoIter = Iter<'a, K, V>;
     fn into_iter(self) -> Iter<'a, K, V> { self.iter() }
 }
 
-impl<'a, K: Hash + Eq, V, S: HashState> IntoIterator for &'a mut LinkedHashMap<K, V, S> {
+impl<'a, K: Hash + Eq, V> IntoIterator for &'a mut LinkedHashMap<K, V> {
     type Item = (&'a K, &'a mut V);
     type IntoIter = IterMut<'a, K, V>;
     fn into_iter(self) -> IterMut<'a, K, V> { self.iter_mut() }

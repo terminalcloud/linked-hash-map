@@ -1,5 +1,6 @@
-extern crate linked_hash_map;
+extern crate terminal_linked_hash_map;
 
+pub use terminal_linked_hash_map as linked_hash_map;
 use linked_hash_map::LinkedHashMap;
 
 fn assert_opt_eq<V: PartialEq>(opt: Option<&V>, v: V) {
